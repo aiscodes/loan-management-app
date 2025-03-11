@@ -38,6 +38,7 @@ Follow the steps below to set up and run the project locally:
 Start by cloning the repository to your local machine:
 
 ```bash
+https://github.com/aiscodes/loan-management-app
 cd loan-management-app
 ```
 

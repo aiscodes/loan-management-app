@@ -1,0 +1,19 @@
+generator client {
+  provider      = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Loan {
+  id         String   @id @default(uuid())
+  amount     Float
+  interest   Float
+  duration   Int
+  collateral String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

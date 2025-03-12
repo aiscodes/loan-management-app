@@ -4,16 +4,11 @@ import Header from './Header'
 
 interface MainPageProps {
   children: ReactNode
-  actionButton?: ReactNode
   title?: string
   additionalText?: string
 }
 
-const MainPage = ({
-  children,
-  actionButton,
-  additionalText
-}: MainPageProps) => {
+const MainPage = ({ children, additionalText }: MainPageProps) => {
   return (
     <div className="min-h-screen">
       <Header />
@@ -28,9 +23,6 @@ const MainPage = ({
           </div>
           {additionalText && (
             <p className="heading-secondary">{additionalText}</p>
-          )}
-          {actionButton && (
-            <div className="mt-6 flex justify-center">{actionButton}</div>
           )}
           <div className="mt-8 w-full">{children}</div>
         </div>

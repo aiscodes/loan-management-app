@@ -17,5 +17,17 @@ export const calculateAPR = function (duration: number) {
 
   const apr = baseAPR + ((duration - 12) / (60 - 12)) * (maxAPR - baseAPR)
 
-  return Math.min(Math.max(apr, baseAPR), maxAPR) // Ограничиваем диапазон
+  return Math.min(Math.max(apr, baseAPR), maxAPR)
+}
+
+export const getUsers = async function () {
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: { name: 'asc' }
+    })
+    prisma.$disconnect()
+    return users
+  } catch {
+    return []
+  }
 }

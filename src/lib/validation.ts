@@ -1,4 +1,4 @@
-import { calculateAPR } from '.'
+import { calculateAPR } from '../utils'
 
 interface LoanFields {
   amount: number

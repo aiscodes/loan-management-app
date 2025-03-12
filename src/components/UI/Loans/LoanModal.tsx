@@ -7,21 +7,22 @@ import React, {
   Dispatch,
   SetStateAction
 } from 'react'
-import { FiX, FiPlus } from 'react-icons/fi'
+import { FiX } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-import { Loan, ModalHandles } from '../../../types'
+import { Loan, ModalHandles, User } from '../../../types'
 import { calculateAPR } from '../../../utils'
-import { validateCollateral } from '../../../utils/validation'
+import { validateCollateral } from '../../../lib/validation'
 
 interface Props {
-  loans: Array<Loan>
+  loans: Loan[]
   setLoans: Dispatch<SetStateAction<Loan[]>>
+  users: User[]
 }
 
-const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
-  { loans, setLoans },
+const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
+  { loans, setLoans, users },
   ref
 ) => {
   const [visible, setVisible] = useState(false)
@@ -30,6 +31,11 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
   const [duration, setDuration] = useState(24)
   const [collateral, setCollateral] = useState('')
   const [loan, setLoan] = useState<Loan | null>(null)
+  const [status, setStatus] = useState<
+    'PENDING' | 'ACTIVE' | 'PAID' | 'DEFAULTED'
+  >('PENDING')
+  const [borrowerId, setBorrowerId] = useState('')
+  const [lenderId, setLenderId] = useState('')
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [collateralError, setCollateralError] = useState('')
 
@@ -40,6 +46,9 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
     setCollateral('')
     setLoan(null)
     setCollateralError('')
+    setStatus('PENDING')
+    setBorrowerId('')
+    setLenderId('')
   }, [])
 
   const closeModal = useCallback(() => {
@@ -57,6 +66,9 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
     setDuration(loan.duration ?? 24)
     setCollateral(loan.collateral ?? '')
     setLoan(loan)
+    setStatus(loan.status ?? 'PENDING')
+    setBorrowerId(loan.borrowerId ?? '')
+    setLenderId(loan.lenderId ?? '')
     setVisible(true)
   }, [])
 
@@ -76,7 +88,17 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
 
-    // Collateral validation
+    if (!borrowerId || !lenderId) {
+      toast.error('Both Borrower and Lender must be selected.')
+      return
+    }
+
+    // Проверка, чтобы заемщик и кредитор не были одинаковыми
+    if (borrowerId === lenderId) {
+      toast.error('Borrower and Lender cannot be the same person.')
+      return
+    }
+
     const { isValid, message } = validateCollateral(collateral)
     if (!isValid) {
       setCollateralError(message || '')
@@ -85,32 +107,42 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
 
     try {
       setButtonDisabled(true)
-      const newLoan = { amount, interest, duration, collateral }
+      const newLoan = {
+        amount,
+        interest,
+        duration,
+        collateral,
+        borrowerId,
+        lenderId,
+        status
+      }
+
       if (loan) {
+        // Обновление кредита
         await axios.put(`/api/loans/${loan.id}`, newLoan)
         toast.success('Loan updated successfully')
         setLoans(
-          loans.map((l) => (l.id === loan.id ? { ...newLoan, id: loan.id } : l))
+          loans.map((l) => {
+            if (l.id === loan.id) {
+              return { ...l, ...newLoan }
+            }
+            return l
+          })
         )
       } else {
+        // Добавление нового кредита
         const response = await axios.post('/api/loans', newLoan)
         toast.success('Loan added successfully')
-        setLoans([...loans, { ...response.data }])
+        setLoans([...loans, response.data])
       }
+
       closeModal()
     } catch (error) {
-      const errorMessage =
+      toast.error(
         error.response?.data?.message || 'Error saving loan, please try again.'
-      toast.error(errorMessage)
+      )
     } finally {
       setButtonDisabled(false)
-    }
-  }
-
-  const handleCollateralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCollateral(e.target.value)
-    if (collateralError) {
-      setCollateralError('')
     }
   }
 
@@ -118,13 +150,13 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
 
   return (
     <div className="modal-background">
-      <div className="modal-content">
+      <div className="modal-content w-2/3">
         <div className="modal-header">
-          <h3 className="letter-spacing text-2xl font-semibold text-white">
+          <h3 className="text-2xl font-semibold text-white">
             {loan ? 'Update Loan' : 'Add Loan'}
           </h3>
           <button
-            className="cursor-pointer text-white transition duration-300 ease-in-out hover:text-gray-200"
+            className="cursor-pointer text-white hover:text-gray-200"
             onClick={closeModal}
           >
             <FiX size={24} />
@@ -135,7 +167,7 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
           <p className="mb-2 text-lg font-medium text-white">
             Estimated Monthly Payment
           </p>
-          <h1 className="my-2 text-4xl font-bold leading-tight text-white">
+          <h1 className="my-2 text-4xl font-bold text-white">
             ${calculateMonthlyPayment()}
           </h1>
           <p className="mt-2 text-base text-gray-200">
@@ -146,60 +178,106 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
           </p>
         </div>
 
-        <div className="mb-10 flex flex-col gap-6">
-          <label className="slider-label">Amount: ${amount}</label>
-          <input
-            className="slider"
-            type="range"
-            min="10000"
-            max="200000"
-            value={amount}
-            onChange={(e) => setAmount(Number(e.target.value))}
-          />
+        <div className="flex gap-8">
+          <div className="w-1/2">
+            <label>Borrower:</label>
+            <select
+              className="input-style"
+              value={borrowerId}
+              onChange={(e) => setBorrowerId(e.target.value)}
+            >
+              <option value="">Select Borrower</option>
+              {users &&
+                Array.isArray(users) &&
+                users
+                  .filter((user) => user.isBorrower)
+                  .map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+            </select>
 
-          <label className="slider-label">Length: {duration} Months</label>
-          <input
-            className="slider"
-            type="range"
-            min="12"
-            max="60"
-            value={duration}
-            onChange={(e) => {
-              const newDuration = Number(e.target.value)
-              setDuration(newDuration)
-              setInterest(calculateAPR(newDuration))
-            }}
-          />
+            <label>Lender:</label>
+            <select
+              className="input-style"
+              value={lenderId}
+              onChange={(e) => setLenderId(e.target.value)}
+            >
+              <option value="">Select Lender</option>
+              {users &&
+                Array.isArray(users) &&
+                users
+                  .filter((user) => user.isLender && user.id !== borrowerId) // Фильтрация по заемщику
+                  .map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+            </select>
 
-          <label className="slider-label">Collateral:</label>
-          <input
-            type="text"
-            className={`input-style ${collateralError ? 'border-red-500' : ''}`}
-            value={collateral}
-            onChange={handleCollateralChange}
-            placeholder="Enter collateral details"
-          />
-          {collateralError && (
-            <p className="mt-1 text-sm text-red-500">{collateralError}</p>
-          )}
+            <label>Status:</label>
+            <select
+              className="input-style"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as any)}
+            >
+              <option value="PENDING">Pending</option>
+              <option value="ACTIVE">Active</option>
+              <option value="PAID">Paid</option>
+              <option value="DEFAULTED">Defaulted</option>
+            </select>
+          </div>
+
+          <div className="w-1/2">
+            <div className="mb-6">
+              <label>Amount: ${amount}</label>
+              <input
+                type="range"
+                min="10000"
+                max="200000"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+                className="slider"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="slider-label">Length: {duration} Months</label>
+              <input
+                className="slider"
+                type="range"
+                min="12"
+                max="60"
+                value={duration}
+                onChange={(e) => {
+                  const newDuration = Number(e.target.value)
+                  setDuration(newDuration)
+                  setInterest(calculateAPR(newDuration)) // Пересчитываем процент для нового срока
+                }}
+              />
+            </div>
+            <label>Collateral:</label>
+            <input
+              type="text"
+              className={`input-style ${collateralError ? 'border-red-500' : ''}`}
+              value={collateral}
+              onChange={(e) => setCollateral(e.target.value)}
+              placeholder="Enter collateral details"
+            />
+          </div>
         </div>
 
         <div className="modal-footer flex gap-4">
-          <button
-            className="icon-button icon-button-delete px-5 py-2 text-sm"
-            type="button"
-            onClick={closeModal}
-          >
-            <FiX size={18} className="mr-2" />
+          <button className="btn-secondary" type="button" onClick={closeModal}>
             Cancel
           </button>
           <button
-            className="btn btn-primary px-5 py-2 text-sm"
+            className="btn-primary"
             type="button"
             onClick={handleSubmit}
             disabled={buttonDisabled}
           >
-            <FiPlus size={18} className="mr-2" />
             {loan ? 'Update Loan' : 'Add Loan'}
           </button>
         </div>
@@ -208,4 +286,4 @@ const Modal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
   )
 }
 
-export default forwardRef(Modal)
+export default forwardRef(LoanModal)

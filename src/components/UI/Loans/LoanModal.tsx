@@ -11,9 +11,9 @@ import { FiX, FiPlus } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-import { Loan, ModalHandles } from '../../types'
-import { calculateAPR } from '../../utils'
-import { validateCollateral } from '../../utils/validation'
+import { Loan, ModalHandles } from '../../../types'
+import { calculateAPR } from '../../../utils'
+import { validateCollateral } from '../../../utils/validation'
 
 interface Props {
   loans: Array<Loan>

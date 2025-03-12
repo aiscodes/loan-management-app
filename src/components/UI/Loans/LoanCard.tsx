@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Loan } from '../../types'
+import { Loan } from '../../../types'
 
 interface CardProps {
   loan: Loan
@@ -11,19 +11,19 @@ const Card: React.FC<CardProps> = ({ loan, ButtonGroup }) => {
     <div className="card">
       <div>
         <div className="flex-row">
-          <p className="text-darkPrimary font-bold">Amount:</p>
+          <p className="font-bold text-darkPrimary">Amount:</p>
           <p>${loan.amount}</p>
         </div>
         <div className="flex-row">
-          <p className="text-darkPrimary font-bold">Interest:</p>
+          <p className="font-bold text-darkPrimary">Interest:</p>
           <p>{parseFloat(loan?.interest.toFixed(2))}%</p>
         </div>
         <div className="flex-row">
-          <p className="text-darkPrimary font-bold">Duration:</p>
+          <p className="font-bold text-darkPrimary">Duration:</p>
           <p>{loan.duration} months</p>
         </div>
         <div className="flex-row">
-          <p className="text-darkPrimary font-bold">Collateral:</p>
+          <p className="font-bold text-darkPrimary">Collateral:</p>
           <p>{loan.collateral}</p>
         </div>
       </div>

@@ -3,9 +3,9 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Loan } from '../../types'
-import ButtonGroup from './ButtonGroup'
-import Card from './Card'
+import { Loan } from '../../../types'
+import ButtonGroup from '../ButtonGroup'
+import Card from './LoanCard'
 
 interface LoanListProps {
   loans: Loan[]
@@ -39,11 +39,7 @@ const LoanList: React.FC<LoanListProps> = ({ loans, setLoans, onEditLoan }) => {
   }
 
   if (loans.length === 0) {
-    return (
-      <p className="mt-8 text-center text-2xl font-semibold">
-        No loans available at the moment.
-      </p>
-    )
+    return <p className="mt-8 text-center">No loans available at the moment.</p>
   }
 
   return (

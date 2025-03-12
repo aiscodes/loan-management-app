@@ -12,8 +12,6 @@
 
 body {
   font-family: 'Inter', Arial, sans-serif;
-  background-color: #ffffff;
-  color: #121212;
 }
 
 @layer components {
@@ -26,7 +24,7 @@ body {
   }
 
   .btn-primary {
-    @apply bg-darkSecondary hover:bg-darkPrimary flex items-center gap-2 rounded-lg px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none;
+    @apply flex items-center gap-2 rounded-lg bg-darkSecondary px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 ease-in-out hover:bg-darkPrimary focus:outline-none;
   }
 
   .btn-secondary {
@@ -34,15 +32,15 @@ body {
   }
 
   .card {
-    @apply border-darkSecondary rounded-lg border-2 p-6 shadow-xl transition-transform hover:scale-105;
+    @apply rounded-lg border-2 border-darkSecondary p-6 shadow-xl transition-transform hover:scale-105;
   }
 
   .card-header {
-    @apply text-primary text-lg font-bold;
+    @apply text-lg font-bold text-primary;
   }
 
   .card-body {
-    @apply text-secondary text-sm;
+    @apply text-sm text-secondary;
   }
 
   .fade-in {
@@ -66,7 +64,7 @@ body {
   }
 
   .heading-primary {
-    @apply text-darkSecondary text-4xl font-bold;
+    @apply text-4xl font-bold text-darkSecondary;
   }
 
   .heading-secondary {
@@ -108,21 +106,25 @@ body {
   }
 
   .input-style {
-    @apply focus:ring-darkPrimary hover:border-darkPrimary w-full rounded-lg border-2 p-4 text-sm focus:outline-none focus:ring-1;
+    @apply w-full rounded-lg border-2 p-4 text-sm hover:border-darkPrimary focus:outline-none focus:ring-1 focus:ring-darkPrimary;
   }
 
   .slider {
-    @apply h-2 w-full appearance-none rounded-lg bg-gray-200;
-    background: linear-gradient(to right, #34d399, #134e4a);
+    @apply h-2 w-full appearance-none rounded-lg bg-gray-700;
+    background: linear-gradient(
+      to right,
+      #585858,
+      #2a2a2a
+    ); /* Gradient from dark gray to darker gray */
     transition: background 0.3s ease;
   }
 
   .slider-label {
-    @apply text-darkPrimary text-sm font-semibold;
+    @apply text-sm font-semibold text-darkPrimary;
   }
 
   .slider::-webkit-slider-thumb {
-    @apply bg-darkPrimary h-4 w-4 cursor-pointer appearance-none rounded-lg border-2 border-white shadow-lg;
+    @apply h-4 w-4 cursor-pointer appearance-none rounded-lg border-2 border-white bg-darkPrimary shadow-lg;
   }
 
   .modal-background {
@@ -130,15 +132,15 @@ body {
   }
 
   .modal-content {
-    @apply animate-scale-up w-full max-w-lg rounded-lg bg-white p-8 shadow-lg;
+    @apply w-full max-w-lg animate-scale-up rounded-lg bg-white p-8 shadow-lg;
   }
 
   .modal-header {
-    @apply from-darkSecondary via-darkPrimary to-darkBg mb-6 flex items-center justify-between rounded-t-lg bg-gradient-to-r p-4;
+    @apply mb-6 flex items-center justify-between rounded-t-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-4;
   }
 
   .modal-body {
-    @apply from-darkSecondary via-darkPrimary to-darkBg mb-10 rounded-lg bg-gradient-to-r p-6 text-center;
+    @apply mb-10 rounded-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-6 text-center;
   }
 
   .modal-footer {
@@ -150,7 +152,7 @@ body {
   }
 
   .mobile-nav {
-    @apply from-darkSecondary via-darkPrimary to-darkBg bg-gradient-to-r;
+    @apply bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg;
   }
 
   .mobile-link {

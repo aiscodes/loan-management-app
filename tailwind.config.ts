@@ -6,24 +6,24 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#22c55e',
-        secondary: '#16a34a',
-        accent: '#34d399',
-        lightAccent: '#a7f3d0',
-        lightBg: '#f8f9fa',
-        darkBg: '#1a1a1a',
-        darkPrimary: '#134e4a',
-        darkSecondary: '#2c7a66',
-        muted: '#f1f5f9',
-        highlight: '#4ade80'
+        primary: '#1f1f1f', // Dark gray primary color
+        secondary: '#343434', // Darker gray secondary color
+        accent: '#2a2a2a', // Slightly lighter dark gray accent
+        lightAccent: '#585858', // A light gray accent
+        lightBg: '#1a1a1a', // Dark background
+        darkBg: '#0a0a0a', // Very dark background
+        darkPrimary: '#0d0d0d', // Almost black primary color
+        darkSecondary: '#202020', // Dark secondary color
+        muted: '#2e2e2e', // Muted dark gray
+        highlight: '#4c4c4c' // Highlight in dark gray
       },
       fontFamily: {
         sans: ['Inter', 'Arial', 'sans-serif']
       },
       boxShadow: {
-        'lg-dark': '0 10px 20px rgba(0, 0, 0, 0.15)',
-        'btn-dark': '0 4px 8px rgba(0, 0, 0, 0.2)',
-        card: '0 6px 15px rgba(0, 0, 0, 0.1)'
+        'lg-dark': '0 10px 20px rgba(0, 0, 0, 0.3)', // Darker shadow
+        'btn-dark': '0 4px 8px rgba(0, 0, 0, 0.3)', // Darker button shadow
+        card: '0 6px 15px rgba(0, 0, 0, 0.15)' // Dark card shadow
       },
       spacing: {
         128: '32rem'

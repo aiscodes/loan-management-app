@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import prisma from './prisma'
+import prisma from '../../../lib/prisma'
 import logger from '../../../utils/logger'
 
 // Create a user (can be a borrower and/or lender)

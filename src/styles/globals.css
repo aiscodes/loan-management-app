@@ -31,6 +31,12 @@ body {
     @apply rounded-lg bg-gray-700 px-6 py-3 font-semibold text-white transition-all duration-300 ease-in-out hover:bg-gray-800;
   }
 
+  .btn-primary,
+  .btn-secondary {
+    @apply px-5 py-2;
+    font-size: 0.875rem;
+  }
+
   .card {
     @apply rounded-lg border-2 border-darkSecondary p-6 shadow-xl transition-transform hover:scale-105;
   }
@@ -52,7 +58,7 @@ body {
   }
 
   .input-field {
-    @apply rounded-lg border border-gray-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-700 dark:bg-gray-800 dark:text-white;
+    @apply px-3 py-2;
   }
 
   .input-error {
@@ -106,7 +112,7 @@ body {
   }
 
   .input-style {
-    @apply w-full rounded-lg border-2 p-4 text-sm hover:border-darkPrimary focus:outline-none focus:ring-1 focus:ring-darkPrimary;
+    @apply mb-4 w-full rounded-lg border-2 p-3 text-sm hover:border-darkPrimary focus:outline-none focus:ring-1 focus:ring-darkPrimary;
   }
 
   .slider {
@@ -132,19 +138,21 @@ body {
   }
 
   .modal-content {
-    @apply w-full max-w-lg animate-scale-up rounded-lg bg-white p-8 shadow-lg;
+    @apply w-full max-w-xl animate-scale-up rounded-lg bg-white p-6 shadow-lg;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 
   .modal-header {
-    @apply mb-6 flex items-center justify-between rounded-t-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-4;
+    @apply mb-4 flex items-center justify-between rounded-t-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-3;
   }
 
   .modal-body {
-    @apply mb-10 rounded-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-6 text-center;
+    @apply mb-8 rounded-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-4 text-center;
   }
 
   .modal-footer {
-    @apply mt-6 flex items-center justify-between;
+    @apply mt-4 flex items-center justify-between;
   }
 
   .burger-btn {
@@ -157,5 +165,21 @@ body {
 
   .mobile-link {
     @apply block rounded-lg px-4 py-2 text-white hover:bg-gray-700;
+  }
+
+  .modal-body p {
+    @apply text-base;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  .mb-10 {
+    @apply mb-6;
   }
 }

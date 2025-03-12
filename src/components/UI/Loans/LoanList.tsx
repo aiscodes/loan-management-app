@@ -39,7 +39,7 @@ const LoanList: React.FC<LoanListProps> = ({ loans, setLoans, onEditLoan }) => {
   }
 
   if (loans.length === 0) {
-    return <p className="mt-8 text-center">No loans available at the moment.</p>
+    return <p className="my-8 text-center">No loans available at the moment.</p>
   }
 
   return (

@@ -2,8 +2,8 @@ import Head from 'next/head'
 import { useState, useCallback, useRef } from 'react'
 import MainPage from '../components/Layout/MainPage'
 import { GetServerSideProps } from 'next'
-import { getLoans } from '../utils'
-import { Loan, ModalHandles } from '../types'
+import { getLoans, getUsers } from '../utils'
+import { Loan, ModalHandles, User } from '../types'
 import ActionButton from '../components/UI/ButtonGroup/ActionButton'
 import { FiPlus } from 'react-icons/fi'
 import LoanList from '../components/UI/Loans/LoanList'
@@ -11,11 +11,12 @@ import LoanModal from '../components/UI/Loans/LoanModal'
 
 interface HomeProps {
   loans: Loan[]
+  users: User[]
 }
 
-const Home = ({ loans: storedLoans }: HomeProps) => {
+const Home = ({ loans: storedLoans, users }: HomeProps) => {
   const [loans, setLoans] = useState<Array<Loan>>(storedLoans)
-  const [activeTab, setActiveTab] = useState('loans') // Track active tab
+  const [activeTab, setActiveTab] = useState('loans')
   const modalRef = useRef<ModalHandles>(null)
 
   const openModal = useCallback(() => {
@@ -32,17 +33,7 @@ const Home = ({ loans: storedLoans }: HomeProps) => {
         <title>Loan Tracker</title>
         <link rel="icon" href="/favicon.svg" />
       </Head>
-      <MainPage
-        actionButton={
-          <ActionButton
-            icon={<FiPlus size={18} />}
-            className="btn btn-primary"
-            onClick={openModal}
-            label="Create a new loan"
-            ariaLabel="Create a new loan"
-          />
-        }
-      >
+      <MainPage>
         <div className="flex">
           <div className="flex w-1/4 flex-col">
             <button
@@ -66,7 +57,17 @@ const Home = ({ loans: storedLoans }: HomeProps) => {
           <div className="ml-8 w-full">
             {activeTab === 'users' && (
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold">Users</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-semibold">Users</h3>
+                  <ActionButton
+                    icon={<FiPlus size={18} />}
+                    className="btn btn-primary"
+                    onClick={openModal}
+                    label="Create a new user"
+                    ariaLabel="Create a new user"
+                  />
+                </div>
+
                 <div className="rounded-lg bg-gray-200 p-4">
                   Users will be listed here...
                 </div>
@@ -75,7 +76,16 @@ const Home = ({ loans: storedLoans }: HomeProps) => {
 
             {activeTab === 'loans' && (
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold">Loans</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-semibold">Loans</h3>
+                  <ActionButton
+                    icon={<FiPlus size={18} />}
+                    className="btn btn-primary"
+                    onClick={openModal}
+                    label="Create a new loan"
+                    ariaLabel="Create a new loan"
+                  />
+                </div>
                 <div className="rounded-lg bg-gray-200 p-4">
                   <LoanList
                     loans={loans}
@@ -88,10 +98,16 @@ const Home = ({ loans: storedLoans }: HomeProps) => {
           </div>
         </div>
       </MainPage>
-      <LoanModal loans={loans} setLoans={setLoans} ref={modalRef} />
+      <LoanModal
+        loans={loans}
+        setLoans={setLoans}
+        ref={modalRef}
+        users={users}
+      />
     </>
   )
 }
+export default Home
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
@@ -109,19 +125,21 @@ export const getServerSideProps: GetServerSideProps = async () => {
           : loan.updatedAt
     }))
 
+    const users = await getUsers()
+
     return {
       props: {
-        loans
+        loans,
+        users
       }
     }
   } catch (error) {
     console.error('Error fetching loans:', error)
     return {
       props: {
-        loans: []
+        loans: [],
+        users: []
       }
     }
   }
 }
-
-export default Home

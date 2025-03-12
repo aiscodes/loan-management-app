@@ -1,5 +1,5 @@
 generator client {
-  provider      = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,12 +8,31 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  name        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  borrowers   Loan[]   @relation("BorrowerLoans")
+  loans       Loan[]   @relation("LenderLoans")
+  isBorrower  Boolean  @default(false)
+  isLender    Boolean  @default(false)
+}
+
 model Loan {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   amount     Float
   interest   Float
   duration   Int
+  status     String    @default("PENDING")
+  startDate  DateTime?
+  endDate    DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  lenderId   String
+  borrowerId String
   collateral String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  borrower   User      @relation("BorrowerLoans", fields: [borrowerId], references: [id])
+  lender     User      @relation("LenderLoans", fields: [lenderId], references: [id])
 }

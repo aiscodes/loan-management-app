@@ -23,7 +23,7 @@ const UserCard: React.FC<CardProps> = ({ user }) => {
         </Typography>
         <Divider className="my-4 bg-gray-300" />
         <Box className="space-y-4">
-          <Box className="flex justify-between">
+          <Box className="space-between">
             <Typography className="font-bold text-darkPrimary">
               Name:
             </Typography>
@@ -34,7 +34,7 @@ const UserCard: React.FC<CardProps> = ({ user }) => {
               {user.name}
             </Typography>
           </Box>
-          <Box className="flex justify-between">
+          <Box className="space-between">
             <Typography className="font-bold text-darkPrimary">
               Email:
             </Typography>
@@ -45,7 +45,7 @@ const UserCard: React.FC<CardProps> = ({ user }) => {
               {user.email}
             </Typography>
           </Box>
-          <Box className="flex justify-between">
+          <Box className="space-between">
             <Typography className="font-bold text-darkPrimary">
               Role:
             </Typography>
@@ -56,7 +56,7 @@ const UserCard: React.FC<CardProps> = ({ user }) => {
               {user.isBorrower ? 'Borrower' : 'Lender'}
             </Typography>
           </Box>
-          <Box className="flex justify-between">
+          <Box className="space-between">
             <Typography className="font-bold text-darkPrimary">
               Created At:
             </Typography>
@@ -67,7 +67,7 @@ const UserCard: React.FC<CardProps> = ({ user }) => {
               {new Date(user.createdAt).toLocaleString()}
             </Typography>
           </Box>
-          <Box className="flex justify-between">
+          <Box className="space-between">
             <Typography className="font-bold text-darkPrimary">
               Updated At:
             </Typography>

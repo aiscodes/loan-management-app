@@ -2,6 +2,7 @@ import { forwardRef, useImperativeHandle, useState } from 'react'
 import { ModalHandles, User } from '../../../types'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Box, Typography } from '@mui/material'
 
 interface UserModalProps {
   users: User[]
@@ -63,11 +64,13 @@ const UserModal = forwardRef<ModalHandles, UserModalProps>(
     if (!isOpen) return null
 
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="w-96 rounded-lg bg-white p-6">
-          <h2 className="mb-4 text-xl font-semibold">Create New User</h2>
+      <Box className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <Box className="w-96 rounded-lg bg-white p-6">
+          <Typography className="mb-4 text-xl font-semibold">
+            Create New User
+          </Typography>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+            <Box>
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
@@ -82,8 +85,8 @@ const UserModal = forwardRef<ModalHandles, UserModalProps>(
                 onChange={(e) => setName(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </Box>
+            <Box>
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
@@ -98,13 +101,13 @@ const UserModal = forwardRef<ModalHandles, UserModalProps>(
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </Box>
+            <Box>
               <label className="block text-sm font-medium text-gray-700">
                 Roles
               </label>
-              <div className="flex items-center space-x-4">
-                <div>
+              <Box className="flex items-center space-x-4">
+                <Box>
                   <input
                     type="checkbox"
                     id="isBorrower"
@@ -114,8 +117,8 @@ const UserModal = forwardRef<ModalHandles, UserModalProps>(
                   <label htmlFor="isBorrower" className="ml-2 text-sm">
                     Borrower
                   </label>
-                </div>
-                <div>
+                </Box>
+                <Box>
                   <input
                     type="checkbox"
                     id="isLender"
@@ -125,9 +128,9 @@ const UserModal = forwardRef<ModalHandles, UserModalProps>(
                   <label htmlFor="isLender" className="ml-2 text-sm">
                     Lender
                   </label>
-                </div>
-              </div>
-            </div>
+                </Box>
+              </Box>
+            </Box>
             <button
               type="submit"
               className="w-full rounded-md bg-darkPrimary py-2 text-white"
@@ -138,8 +141,8 @@ const UserModal = forwardRef<ModalHandles, UserModalProps>(
           <button onClick={closeModal} className="btn-secondary mt-4 w-full">
             Close
           </button>
-        </div>
-      </div>
+        </Box>
+      </Box>
     )
   }
 )

@@ -31,13 +31,13 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({
         onClick={() => onDeleteLoan(loan.id)}
         disabled={isDeletingLoan === loan.id}
         ariaLabel="Delete Loan"
-        className="icon-button icon-button-delete px-5 py-2 text-sm"
+        className="icon-button icon-button-delete"
       />
       <ActionButton
         icon={<FiEye size={18} />}
         onClick={() => onViewLoan(loan.id)}
         ariaLabel="View Loan Details"
-        className="icon-button icon-button-view px-5 py-2 text-sm"
+        className="icon-button icon-button-view"
       />
     </Box>
   )

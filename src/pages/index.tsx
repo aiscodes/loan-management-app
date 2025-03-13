@@ -10,7 +10,14 @@ import LoanList from '../components/Layout/Loans/LoanList'
 import LoanModal from '../components/Layout/Loans/LoanModal'
 import UserList from '../components/Layout/Users/UserList'
 import UserModal from '../components/Layout/Users/UserModal'
-import { Box, Tabs, Tab, useMediaQuery, useTheme } from '@mui/material'
+import {
+  Box,
+  Tabs,
+  Tab,
+  useMediaQuery,
+  useTheme,
+  Typography
+} from '@mui/material'
 
 interface HomeProps {
   loans: Loan[]
@@ -90,7 +97,9 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
               {activeTab === 'users' && (
                 <Box className="space-y-4">
                   <Box className="centred-box">
-                    <h3 className="text-xl font-semibold">Users</h3>
+                    <Typography className="text-xl font-semibold">
+                      Users
+                    </Typography>
                     <ActionButton
                       icon={<FiPlus size={18} />}
                       className="btn btn-primary"
@@ -109,7 +118,9 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
               {activeTab === 'loans' && (
                 <Box className="space-y-4">
                   <Box className="centred-box">
-                    <h3 className="text-xl font-semibold">Loans</h3>
+                    <Typography className="text-xl font-semibold">
+                      Loans
+                    </Typography>
                     <ActionButton
                       icon={<FiPlus size={18} />}
                       className="btn btn-primary"

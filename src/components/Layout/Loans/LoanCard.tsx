@@ -28,7 +28,7 @@ const LoanCard: React.FC<CardProps> = ({ loan, ButtonGroup }) => {
         </Typography>
         <Divider className="my-4 bg-gray-300" />
         <Box className="grid grid-cols-2 gap-2">
-          <Box className="flex flex-col">
+          <Box className="card-flex">
             <Typography variant="body2" color="text.secondary">
               Amount:
             </Typography>
@@ -36,7 +36,7 @@ const LoanCard: React.FC<CardProps> = ({ loan, ButtonGroup }) => {
               ${loan.amount}
             </Typography>
           </Box>
-          <Box className="flex flex-col">
+          <Box className="card-flex">
             <Typography variant="body2" color="text.secondary">
               Interest:
             </Typography>
@@ -44,7 +44,7 @@ const LoanCard: React.FC<CardProps> = ({ loan, ButtonGroup }) => {
               {parseFloat(loan?.interest.toFixed(2))}%
             </Typography>
           </Box>
-          <Box className="flex flex-col">
+          <Box className="card-flex">
             <Typography variant="body2" color="text.secondary">
               Duration:
             </Typography>
@@ -52,7 +52,7 @@ const LoanCard: React.FC<CardProps> = ({ loan, ButtonGroup }) => {
               {loan.duration} months
             </Typography>
           </Box>
-          <Box className="flex flex-col">
+          <Box className="card-flex">
             <Typography variant="body2" color="text.secondary">
               Collateral:
             </Typography>

@@ -48,7 +48,7 @@ const LoanList: React.FC<LoanListProps> = ({ loans, setLoans, onEditLoan }) => {
   }
 
   return (
-    <Box className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
+    <Box className="list-grid">
       {loans.map((loan) => (
         <Card
           key={loan.id}

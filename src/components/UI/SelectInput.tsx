@@ -16,7 +16,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   error
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="card-flex">
       <label className="text-white">{label}:</label>
       <select
         className={`input-style ${error ? 'border-red-500' : ''}`}

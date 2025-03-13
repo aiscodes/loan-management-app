@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { FiMenu, FiX } from 'react-icons/fi'
+import { Box } from '@mui/material'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -12,8 +13,8 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg backdrop-blur-md dark:border-gray-700">
-      <div className="centred-box container mx-auto px-6 py-4">
-        <div className="flex items-center gap-3">
+      <Box className="centred-box container mx-auto px-6 py-4">
+        <Box className="flex items-center gap-3">
           <Link
             href="/"
             className="text-2xl font-semibold text-primary dark:text-white"
@@ -21,7 +22,7 @@ const Header = () => {
           >
             LoanTracker
           </Link>
-        </div>
+        </Box>
 
         <nav className="hidden items-center gap-8 text-gray-700 md:flex dark:text-gray-100">
           <Link
@@ -47,7 +48,7 @@ const Header = () => {
         >
           {isMenuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
         </button>
-      </div>
+      </Box>
 
       <nav
         className={`mobile-nav absolute left-0 top-16 w-full overflow-hidden px-6 py-4 shadow-md transition-all duration-300 ease-in-out md:hidden ${

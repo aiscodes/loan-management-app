@@ -54,7 +54,7 @@ body {
   }
 
   .icon-button {
-    @apply flex items-center gap-2 rounded-lg p-3 transition-all duration-200 ease-in-out focus:outline-none;
+    @apply flex items-center gap-2 rounded-lg p-3 px-5 py-2 text-sm transition-all duration-200 ease-in-out focus:outline-none;
   }
 
   .icon-button-delete {
@@ -71,8 +71,12 @@ body {
     @apply outline-none;
   }
 
+  .space-between {
+    @apply flex justify-between;
+  }
+
   .flex-row {
-    @apply flex justify-between text-lg font-medium;
+    @apply space-between text-lg font-medium;
   }
 
   .input-style {
@@ -145,5 +149,17 @@ body {
 
   .centred-box {
     @apply flex items-center justify-between;
+  }
+
+  .card-flex {
+    @apply flex flex-col;
+  }
+
+  .list-grid {
+    @apply grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .details-header {
+    @apply border-b border-highlight pb-2 text-xl font-semibold text-white;
   }
 }

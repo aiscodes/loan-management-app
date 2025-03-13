@@ -17,7 +17,7 @@ const UserList: React.FC<UserListProps> = ({ users }) => {
   }
 
   return (
-    <Box className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
+    <Box className="list-grid">
       {users.map((user) => (
         <Card key={user.id} user={user} />
       ))}

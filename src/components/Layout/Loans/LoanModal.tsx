@@ -15,6 +15,7 @@ import { Loan, LoanStatus, ModalHandles, User } from '../../../types'
 import { calculateAPR } from '../../../utils'
 import { validateCollateral } from '../../../lib/validation'
 import SelectInput from '../../UI/SelectInput'
+import { Box, Typography } from '@mui/material'
 
 interface Props {
   loans: Loan[]
@@ -140,37 +141,37 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
   if (!visible) return null
 
   return (
-    <div className="modal-background">
-      <div className="modal-content w-2/3">
-        <div className="modal-header">
-          <h3 className="text-2xl font-semibold text-white">
+    <Box className="modal-background">
+      <Box className="modal-content w-2/3">
+        <Box className="modal-header">
+          <Typography className="text-2xl font-semibold text-white">
             {loan ? 'Update Loan' : 'Add Loan'}
-          </h3>
+          </Typography>
           <button
             className="cursor-pointer text-white hover:text-gray-200"
             onClick={closeModal}
           >
             <FiX size={24} />
           </button>
-        </div>
+        </Box>
 
-        <div className="modal-body">
-          <p className="mb-2 text-lg font-medium text-white">
+        <Box className="modal-body">
+          <Typography className="mb-2 text-lg font-medium text-white">
             Estimated Monthly Payment
-          </p>
-          <h1 className="my-2 text-4xl font-bold text-white">
+          </Typography>
+          <Typography className="my-2 text-4xl font-bold text-white">
             ${calculateMonthlyPayment()}
-          </h1>
-          <p className="mt-2 text-base text-gray-200">
+          </Typography>
+          <Typography className="mt-2 text-base text-gray-200">
             {parseFloat(interest.toFixed(2))}% APR
             <br />
             Total Cost: $
             {(Number(calculateMonthlyPayment()) * duration).toFixed(0)}
-          </p>
-        </div>
+          </Typography>
+        </Box>
 
-        <div className="flex gap-8">
-          <div className="w-1/2">
+        <Box className="flex gap-8">
+          <Box className="w-1/2">
             <SelectInput
               label="Borrower"
               value={borrowerId}
@@ -200,10 +201,10 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
                 { value: 'DEFAULTED', label: 'Defaulted' }
               ]}
             />
-          </div>
+          </Box>
 
-          <div className="w-1/2">
-            <div className="mb-6">
+          <Box className="w-1/2">
+            <Box className="mb-6">
               <label>Amount: ${amount}</label>
               <input
                 type="range"
@@ -213,9 +214,9 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
                 onChange={(e) => setAmount(Number(e.target.value))}
                 className="slider"
               />
-            </div>
+            </Box>
 
-            <div className="mb-6">
+            <Box className="mb-6">
               <label>Length: {duration} Months</label>
               <input
                 type="range"
@@ -229,7 +230,7 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
                 }}
                 className="slider"
               />
-            </div>
+            </Box>
 
             <label>Collateral:</label>
             <input
@@ -240,12 +241,14 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
               placeholder="Enter collateral details"
             />
             {collateralError && (
-              <p className="mt-1 text-sm text-red-500">{collateralError}</p>
+              <Typography className="mt-1 text-sm text-red-500">
+                {collateralError}
+              </Typography>
             )}
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        <div className="modal-footer flex gap-4">
+        <Box className="modal-footer flex gap-4">
           <button className="btn-secondary" type="button" onClick={closeModal}>
             Cancel
           </button>
@@ -257,9 +260,9 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
           >
             {loan ? 'Update Loan' : 'Add Loan'}
           </button>
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

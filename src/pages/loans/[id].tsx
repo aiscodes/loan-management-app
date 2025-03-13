@@ -52,7 +52,7 @@ const LoanDetails = () => {
   }
 
   const LoanDetail = ({ label, value }: { label: string; value: string }) => (
-    <Box className="flex justify-between border-b border-highlight py-2">
+    <Box className="space-between border-b border-highlight py-2">
       <Typography className="text-gray-300">{label}:</Typography>
       <Typography className="font-semibold text-white">{value}</Typography>
     </Box>
@@ -62,9 +62,7 @@ const LoanDetails = () => {
     <Box className="mx-auto mt-2 w-full max-w-5xl rounded-lg bg-darkSecondary p-8 shadow-lg">
       <Box className="grid grid-cols-2 gap-8">
         <Box className="space-y-3">
-          <Typography className="border-b border-highlight pb-2 text-xl font-semibold text-white">
-            Loan Information
-          </Typography>
+          <Typography className="details-header">Loan Information</Typography>
           <LoanDetail label="ID" value={loan?.id ?? 'N/A'} />
           <LoanDetail label="Amount" value={`$${loan?.amount ?? 'N/A'}`} />
           <LoanDetail
@@ -94,7 +92,7 @@ const LoanDetails = () => {
         <Box className="space-y-6">
           {borrower && (
             <Box>
-              <Typography className="border-b border-highlight pb-2 text-xl font-semibold text-white">
+              <Typography className="details-header">
                 Borrower Information
               </Typography>
               <LoanDetail label="Name" value={borrower.name ?? 'N/A'} />
@@ -104,7 +102,7 @@ const LoanDetails = () => {
 
           {lender && (
             <Box>
-              <Typography className="border-b border-highlight pb-2 text-xl font-semibold text-white">
+              <Typography className="details-header">
                 Lender Information
               </Typography>
               <LoanDetail label="Name" value={lender.name ?? 'N/A'} />

@@ -2,7 +2,7 @@ import React from 'react'
 
 interface ActionButtonProps {
   icon?: React.ReactNode
-  label: string
+  label?: string
   onClick: () => void
   disabled?: boolean
   ariaLabel: string
@@ -24,7 +24,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
     aria-label={ariaLabel}
   >
     {icon}
-    <span>{label}</span>
+    {label && <span>{label}</span>}
   </button>
 )
 

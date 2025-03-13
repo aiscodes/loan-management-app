@@ -1,164 +1,149 @@
-import { useState } from 'react'
-import { ModalHandles } from '../../../types'
-import { createUser } from '../../../utils'
+import { forwardRef, useImperativeHandle, useState } from 'react'
+import { ModalHandles, User } from '../../../types'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface UserModalProps {
-  ref: React.Ref<ModalHandles>
-  onSuccess: () => void
+  users: User[]
+  setUsers: React.Dispatch<React.SetStateAction<any[]>>
 }
 
-const UserModal = ({ ref, onSuccess }: UserModalProps) => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [isBorrower, setIsBorrower] = useState(false)
-  const [isLender, setIsLender] = useState(false)
-  const [loanData, setLoanData] = useState({
-    amount: 0,
-    interest: 0,
-    duration: 0,
-    collateral: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+const UserModal = forwardRef<ModalHandles, UserModalProps>(
+  ({ users, setUsers }, ref) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [isBorrower, setIsBorrower] = useState(false)
+    const [isLender, setIsLender] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    const openModal = () => setIsOpen(true)
 
-    const result = await createUser({
-      name,
-      email,
-      isBorrower,
-      isLender,
-      loanData: isBorrower ? loanData : undefined
-    })
+    const closeModal = () => setIsOpen(false)
 
-    if (result.success) {
-      onSuccess()
-      // Закрытие модалки, если создание прошло успешно
-      ref.current?.closeModal()
-    } else {
-      setError(result.error || 'Something went wrong')
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault()
+
+      const newUser = {
+        name,
+        email,
+        isBorrower,
+        isLender
+      }
+
+      try {
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newUser)
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          const errorMessage = errorData.message || 'Failed to create user'
+          throw new Error(errorMessage)
+        }
+
+        const createdUser = await response.json()
+        setUsers([...users, createdUser])
+        closeModal()
+        toast.success('User created successfully!')
+      } catch (error: any) {
+        console.error('Error creating user:', error.message)
+        toast.error(`Error: ${error.message || 'Failed to create user'}`)
+      }
     }
 
-    setLoading(false)
-  }
+    useImperativeHandle(ref, () => ({
+      openModal,
+      closeModal
+    }))
 
-  return (
-    <div className="modal">
-      <div className="modal-content">
-        <h3>Create User</h3>
-        {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="Enter name"
-            />
-          </div>
+    if (!isOpen) return null
 
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="Enter email"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="w-96 rounded-lg bg-white p-6">
+          <h2 className="mb-4 text-xl font-semibold">Create New User</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
               <input
-                type="checkbox"
-                checked={isBorrower}
-                onChange={() => setIsBorrower(!isBorrower)}
+                type="text"
+                id="name"
+                className="mt-1 w-full rounded-md border border-gray-300 p-2"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
               />
-              Borrower
-            </label>
-            <label>
+            </div>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
               <input
-                type="checkbox"
-                checked={isLender}
-                onChange={() => setIsLender(!isLender)}
+                type="email"
+                id="email"
+                className="mt-1 w-full rounded-md border border-gray-300 p-2"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
-              Lender
-            </label>
-          </div>
-
-          {isBorrower && (
-            <div className="loan-details">
-              <h4>Loan Information</h4>
-              <div className="form-group">
-                <label>Amount</label>
-                <input
-                  type="number"
-                  value={loanData.amount}
-                  onChange={(e) =>
-                    setLoanData({ ...loanData, amount: Number(e.target.value) })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Interest</label>
-                <input
-                  type="number"
-                  value={loanData.interest}
-                  onChange={(e) =>
-                    setLoanData({
-                      ...loanData,
-                      interest: Number(e.target.value)
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Duration (months)</label>
-                <input
-                  type="number"
-                  value={loanData.duration}
-                  onChange={(e) =>
-                    setLoanData({
-                      ...loanData,
-                      duration: Number(e.target.value)
-                    })
-                  }
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Collateral</label>
-                <input
-                  type="text"
-                  value={loanData.collateral}
-                  onChange={(e) =>
-                    setLoanData({ ...loanData, collateral: e.target.value })
-                  }
-                />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Roles
+              </label>
+              <div className="flex items-center space-x-4">
+                <div>
+                  <input
+                    type="checkbox"
+                    id="isBorrower"
+                    checked={isBorrower}
+                    onChange={() => setIsBorrower(!isBorrower)}
+                  />
+                  <label htmlFor="isBorrower" className="ml-2 text-sm">
+                    Borrower
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    id="isLender"
+                    checked={isLender}
+                    onChange={() => setIsLender(!isLender)}
+                  />
+                  <label htmlFor="isLender" className="ml-2 text-sm">
+                    Lender
+                  </label>
+                </div>
               </div>
             </div>
-          )}
-
-          <div className="form-group">
             <button
               type="submit"
-              disabled={loading}
-              className="btn btn-primary"
+              className="w-full rounded-md bg-darkPrimary py-2 text-white"
             >
-              {loading ? 'Creating...' : 'Create User'}
+              Create User
             </button>
-          </div>
-        </form>
+          </form>
+          <button onClick={closeModal} className="btn-secondary mt-4 w-full">
+            Close
+          </button>
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
+
+UserModal.displayName = 'UserModal'
 
 export default UserModal

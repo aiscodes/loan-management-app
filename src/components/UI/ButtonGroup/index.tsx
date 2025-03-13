@@ -21,14 +21,14 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({
     <div className="flex gap-4">
       <ActionButton
         icon={<FiEdit size={18} />}
-        label="Edit"
+        // label="Edit"
         onClick={() => onEditLoan(loan)}
         ariaLabel="Edit Loan"
         className="btn btn-primary px-5 py-2 text-sm"
       />
       <ActionButton
         icon={<FiTrash size={18} />}
-        label="Delete"
+        // label="Delete"
         onClick={() => onDeleteLoan(loan.id)}
         disabled={isDeletingLoan === loan.id}
         ariaLabel="Delete Loan"
@@ -36,7 +36,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({
       />
       <ActionButton
         icon={<FiEye size={18} />}
-        label="View"
+        // label="View"
         onClick={() => onViewLoan(loan.id)}
         ariaLabel="View Loan Details"
         className="icon-button icon-button-view px-5 py-2 text-sm"

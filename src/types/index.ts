@@ -30,5 +30,6 @@ export interface User {
 
 export interface ModalHandles {
   openModal: () => void
-  openEditModal: (loan: Loan) => void
+  closeModal?: () => void
+  openEditModal?: (loan: Loan) => void // Если нужно только в LoanModal, можно оставить опциональным
 }

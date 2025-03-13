@@ -15,19 +15,17 @@ export const createUser = async (formData: {
   }
 }) => {
   try {
-    // Validate that name and email are provided
     if (!formData.name || !formData.email) {
       logger.warn('Validation failed for user creation', { formData })
       return { success: false, error: 'Name and email are required' }
     }
 
-    // Create the user in the database
     const user = await prisma.user.create({
       data: {
         name: formData.name,
         email: formData.email,
-        isBorrower: formData.isBorrower ?? false, // Set isBorrower based on input, default to false
-        isLender: formData.isLender ?? false // Set isLender based on input, default to false
+        isBorrower: formData.isBorrower ?? false,
+        isLender: formData.isLender ?? false
       }
     })
 
@@ -40,14 +38,13 @@ export const createUser = async (formData: {
     if (formData.isBorrower && formData.loanData) {
       const { amount, interest, duration, collateral } = formData.loanData
 
-      // Create a loan for the borrower
       const loan = await prisma.loan.create({
         data: {
           amount,
           interest,
           duration,
           collateral,
-          status: 'PENDING', // Set loan status as 'PENDING' initially
+          status: 'PENDING',
           borrower: { connect: { id: user.id } },
           lender: { connect: { id: formData.isLender ? user.id : '' } }
         }
@@ -63,13 +60,11 @@ export const createUser = async (formData: {
 
     return { success: true, data: user }
   } catch (error: any) {
-    // Handle the case where a user with the same email already exists
     if (error.code === 'P2002') {
       logger.warn('User already exists', { email: formData.email })
       return { success: false, error: 'A user with this email already exists' }
     }
 
-    // Log any other errors
     logger.error('Error creating user', { message: error.message })
     return { success: false, error: 'Failed to create user' }
   }
@@ -78,7 +73,6 @@ export const createUser = async (formData: {
 // Fetch all users
 export const getUsers = async () => {
   try {
-    // Retrieve all users from the database, ordered by name
     const users = await prisma.user.findMany({
       orderBy: { name: 'asc' }
     })
@@ -86,7 +80,6 @@ export const getUsers = async () => {
     logger.log('Fetched all users', { count: users.length })
     return { success: true, data: users }
   } catch (error) {
-    // Log any errors that occur while fetching users
     logger.error('Error fetching users', { message: error })
     return { success: false, error: 'Failed to fetch users' }
   }
@@ -95,7 +88,6 @@ export const getUsers = async () => {
 // Fetch a user by ID
 export const getUserById = async (id: string) => {
   try {
-    // Retrieve a user by ID from the database
     const user = await prisma.user.findUnique({
       where: { id }
     })

@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg backdrop-blur-md dark:border-gray-700">
-      <div className="container mx-auto flex items-center justify-between px-6 py-4">
+      <div className="centred-box container mx-auto px-6 py-4">
         <div className="flex items-center gap-3">
           <Link
             href="/"

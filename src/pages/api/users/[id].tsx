@@ -2,7 +2,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node'
 import { getUserById } from '../../../lib/users'
 import logger from '../../../utils/logger'
 
-// Fetch a user by ID
 const handleGetRequest = async (req: VercelRequest, res: VercelResponse) => {
   const { id } = req.query
 

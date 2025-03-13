@@ -2,7 +2,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node'
 import { createUser, getUsers } from '../../../lib/users'
 import logger from '../../../utils/logger'
 
-// Handle GET request to fetch all users
 const handleGetRequest = async (res: VercelResponse) => {
   try {
     const result = await getUsers()
@@ -17,7 +16,6 @@ const handleGetRequest = async (res: VercelResponse) => {
   }
 }
 
-// Handle POST request to create a new user
 const handlePostRequest = async (req: VercelRequest, res: VercelResponse) => {
   const { name, email, isBorrower, isLender, loanData } = req.body
 

@@ -41,7 +41,8 @@ export const updateLoan = async (
     duration,
     collateral,
     borrowerId,
-    lenderId
+    lenderId,
+    status
   }: {
     amount: string
     interest: string
@@ -49,6 +50,7 @@ export const updateLoan = async (
     collateral: string
     borrowerId: string
     lenderId: string
+    status: string
   }
 ) => {
   const { isValid, message } = validateLoanFields({
@@ -78,7 +80,8 @@ export const updateLoan = async (
         duration: parseInt(duration, 10),
         collateral,
         borrower: { connect: { id: borrowerId } },
-        lender: { connect: { id: lenderId } }
+        lender: { connect: { id: lenderId } },
+        status
       },
       include: {
         borrower: true,
@@ -99,7 +102,8 @@ export const createLoan = async ({
   duration,
   collateral,
   borrowerId,
-  lenderId
+  lenderId,
+  status
 }: {
   amount: string
   interest: string
@@ -107,6 +111,7 @@ export const createLoan = async ({
   collateral: string
   borrowerId: string
   lenderId: string
+  status: string
 }) => {
   const { isValid, message } = validateLoanFields({
     amount: parseFloat(amount),
@@ -134,7 +139,8 @@ export const createLoan = async ({
         duration: parseInt(duration, 10),
         collateral,
         borrower: { connect: { id: borrowerId } },
-        lender: { connect: { id: lenderId } }
+        lender: { connect: { id: lenderId } },
+        status
       },
       include: {
         borrower: true,

@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Loan } from '../../../types'
 import ButtonGroup from '../ButtonGroup'
 import Card from './LoanCard'
+import { Typography, Box } from '@mui/material'
 
 interface LoanListProps {
   loans: Loan[]
@@ -39,11 +40,15 @@ const LoanList: React.FC<LoanListProps> = ({ loans, setLoans, onEditLoan }) => {
   }
 
   if (loans.length === 0) {
-    return <p className="my-8 text-center">No loans available at the moment.</p>
+    return (
+      <Typography className="my-8 text-center">
+        No loans available at the moment.
+      </Typography>
+    )
   }
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
+    <Box className="grid w-full grid-cols-1 gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3">
       {loans.map((loan) => (
         <Card
           key={loan.id}
@@ -59,7 +64,7 @@ const LoanList: React.FC<LoanListProps> = ({ loans, setLoans, onEditLoan }) => {
           }
         />
       ))}
-    </div>
+    </Box>
   )
 }
 

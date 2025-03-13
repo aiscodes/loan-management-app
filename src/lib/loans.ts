@@ -33,6 +33,66 @@ export const getLoanById = async (id: string): Promise<Loan | null> => {
   }
 }
 
+export const updateLoan = async (
+  id: string,
+  {
+    amount,
+    interest,
+    duration,
+    collateral,
+    borrowerId,
+    lenderId
+  }: {
+    amount: string
+    interest: string
+    duration: string
+    collateral: string
+    borrowerId: string
+    lenderId: string
+  }
+) => {
+  const { isValid, message } = validateLoanFields({
+    amount: parseFloat(amount),
+    interest: parseFloat(interest),
+    duration: parseInt(duration, 10),
+    collateral
+  })
+
+  if (!isValid) {
+    throw new Error(message)
+  }
+
+  try {
+    const borrower = await prisma.user.findUnique({ where: { id: borrowerId } })
+    const lender = await prisma.user.findUnique({ where: { id: lenderId } })
+
+    if (!borrower || !lender) {
+      throw new Error('Borrower or lender not found')
+    }
+
+    const updatedLoan = await prisma.loan.update({
+      where: { id },
+      data: {
+        amount: parseFloat(amount),
+        interest: parseFloat(interest),
+        duration: parseInt(duration, 10),
+        collateral,
+        borrower: { connect: { id: borrowerId } },
+        lender: { connect: { id: lenderId } }
+      },
+      include: {
+        borrower: true,
+        lender: true
+      }
+    })
+
+    return updatedLoan
+  } catch (error: any) {
+    logger.error('Error updating loan', { message: error.message })
+    throw new Error('Failed to update loan')
+  }
+}
+
 export const createLoan = async ({
   amount,
   interest,

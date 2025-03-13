@@ -1,54 +1,63 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import prisma from '../../../lib/prisma'
+import { createUser, getUsers } from '../../../lib/users'
 import logger from '../../../utils/logger'
 
-// Получить всех пользователей
+// Handle GET request to fetch all users
 const handleGetRequest = async (res: VercelResponse) => {
   try {
-    const users = await prisma.user.findMany({ orderBy: { name: 'asc' } })
-    return res.status(200).json(users)
+    const result = await getUsers()
+    if (result.success) {
+      return res.status(200).json(result.data)
+    } else {
+      return res.status(500).json({ message: result.error })
+    }
   } catch (error: any) {
     logger.error('Error fetching users', { message: error.message })
     return res.status(500).json({ message: 'Failed to fetch users' })
   }
 }
 
-// Создать пользователя
+// Handle POST request to create a new user
 const handlePostRequest = async (req: VercelRequest, res: VercelResponse) => {
-  const { name, email, isBorrower, isLender } = req.body
-
-  if (!name || !email) {
-    return res.status(400).json({ message: 'Name and email are required' })
-  }
+  const { name, email, isBorrower, isLender, loanData } = req.body
 
   try {
-    const newUser = await prisma.user.create({
-      data: { name, email, isBorrower: !!isBorrower, isLender: !!isLender }
+    const result = await createUser({
+      name,
+      email,
+      isBorrower,
+      isLender,
+      loanData
     })
 
-    return res.status(201).json(newUser)
-  } catch (error: any) {
-    if (error.code === 'P2002') {
-      return res
-        .status(400)
-        .json({ message: 'User with this email already exists' })
+    if (result.success) {
+      return res.status(201).json(result.data)
+    } else {
+      return res.status(400).json({ message: result.error })
     }
+  } catch (error: any) {
     logger.error('Error creating user', { message: error.message })
     return res.status(500).json({ message: 'Failed to create user' })
   }
 }
 
-// Обработчик запросов
 export default async (req: VercelRequest, res: VercelResponse) => {
-  switch (req.method) {
-    case 'GET':
-      return await handleGetRequest(res)
-    case 'POST':
-      return await handlePostRequest(req, res)
-    default:
-      res.setHeader('Allow', ['GET', 'POST'])
-      return res
-        .status(405)
-        .json({ message: `Method ${req.method} Not Allowed` })
+  try {
+    switch (req.method) {
+      case 'GET':
+        return await handleGetRequest(res)
+
+      case 'POST':
+        return await handlePostRequest(req, res)
+
+      default:
+        res.setHeader('Allow', ['GET', 'POST'])
+        return res
+          .status(405)
+          .json({ message: `Method ${req.method} Not Allowed` })
+    }
+  } catch (error: any) {
+    logger.error('Unexpected API Error', { message: error.message })
+    return res.status(500).json({ message: 'Internal Server Error' })
   }
 }

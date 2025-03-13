@@ -8,23 +8,33 @@ import ActionButton from '../components/UI/ButtonGroup/ActionButton'
 import { FiPlus } from 'react-icons/fi'
 import LoanList from '../components/UI/Loans/LoanList'
 import LoanModal from '../components/UI/Loans/LoanModal'
+import UserList from '../components/UI/Users/UserList'
+import UserModal from '../components/UI/Users/UserModal'
 
 interface HomeProps {
   loans: Loan[]
   users: User[]
 }
 
-const Home = ({ loans: storedLoans, users }: HomeProps) => {
+const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
   const [loans, setLoans] = useState<Array<Loan>>(storedLoans)
+  const [users, setUsers] = useState<Array<User>>(storedUsers)
   const [activeTab, setActiveTab] = useState('loans')
-  const modalRef = useRef<ModalHandles>(null)
 
-  const openModal = useCallback(() => {
-    modalRef.current?.openModal()
+  // Отдельные рефы для модалок
+  const loanModalRef = useRef<ModalHandles>(null)
+  const userModalRef = useRef<ModalHandles>(null)
+
+  const openLoanModal = useCallback(() => {
+    loanModalRef.current?.openModal()
   }, [])
 
-  const openEditModal = useCallback((loan: Loan) => {
-    modalRef.current?.openEditModal(loan)
+  const openUserModal = useCallback(() => {
+    userModalRef.current?.openModal()
+  }, [])
+
+  const openEditLoanModal = useCallback((loan: Loan) => {
+    loanModalRef.current?.openEditModal(loan)
   }, [])
 
   return (
@@ -62,14 +72,14 @@ const Home = ({ loans: storedLoans, users }: HomeProps) => {
                   <ActionButton
                     icon={<FiPlus size={18} />}
                     className="btn btn-primary"
-                    onClick={openModal}
+                    onClick={openUserModal}
                     label="Create a new user"
                     ariaLabel="Create a new user"
                   />
                 </div>
 
                 <div className="rounded-lg bg-gray-200 p-4">
-                  Users will be listed here...
+                  <UserList users={users} />
                 </div>
               </div>
             )}
@@ -81,7 +91,7 @@ const Home = ({ loans: storedLoans, users }: HomeProps) => {
                   <ActionButton
                     icon={<FiPlus size={18} />}
                     className="btn btn-primary"
-                    onClick={openModal}
+                    onClick={openLoanModal}
                     label="Create a new loan"
                     ariaLabel="Create a new loan"
                   />
@@ -89,7 +99,7 @@ const Home = ({ loans: storedLoans, users }: HomeProps) => {
                 <div className="rounded-lg bg-gray-200 p-4">
                   <LoanList
                     loans={loans}
-                    onEditLoan={openEditModal}
+                    onEditLoan={openEditLoanModal}
                     setLoans={setLoans}
                   />
                 </div>
@@ -98,15 +108,19 @@ const Home = ({ loans: storedLoans, users }: HomeProps) => {
           </div>
         </div>
       </MainPage>
+
+      {/* Передаем отдельные рефы для каждой модалки */}
       <LoanModal
         loans={loans}
         setLoans={setLoans}
-        ref={modalRef}
+        ref={loanModalRef}
         users={users}
       />
+      <UserModal users={users} setUsers={setUsers} ref={userModalRef} />
     </>
   )
 }
+
 export default Home
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -126,11 +140,22 @@ export const getServerSideProps: GetServerSideProps = async () => {
     }))
 
     const users = await getUsers()
+    const usersWithDates = users.map((user) => ({
+      ...user,
+      createdAt:
+        user.createdAt instanceof Date
+          ? user.createdAt.toISOString()
+          : user.createdAt,
+      updatedAt:
+        user.updatedAt instanceof Date
+          ? user.updatedAt.toISOString()
+          : user.updatedAt
+    }))
 
     return {
       props: {
         loans,
-        users
+        users: usersWithDates
       }
     }
   } catch (error) {

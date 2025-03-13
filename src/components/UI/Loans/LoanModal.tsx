@@ -11,7 +11,7 @@ import { FiX } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
-import { Loan, ModalHandles, User } from '../../../types'
+import { Loan, LoanStatus, ModalHandles, User } from '../../../types'
 import { calculateAPR } from '../../../utils'
 import { validateCollateral } from '../../../lib/validation'
 
@@ -31,9 +31,7 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
   const [duration, setDuration] = useState(24)
   const [collateral, setCollateral] = useState('')
   const [loan, setLoan] = useState<Loan | null>(null)
-  const [status, setStatus] = useState<
-    'PENDING' | 'ACTIVE' | 'PAID' | 'DEFAULTED'
-  >('PENDING')
+  const [status, setStatus] = useState<LoanStatus>('PENDING')
   const [borrowerId, setBorrowerId] = useState('')
   const [lenderId, setLenderId] = useState('')
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -93,7 +91,6 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
       return
     }
 
-    // Проверка, чтобы заемщик и кредитор не были одинаковыми
     if (borrowerId === lenderId) {
       toast.error('Borrower and Lender cannot be the same person.')
       return
@@ -118,7 +115,6 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
       }
 
       if (loan) {
-        // Обновление кредита
         await axios.put(`/api/loans/${loan.id}`, newLoan)
         toast.success('Loan updated successfully')
         setLoans(
@@ -130,7 +126,6 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
           })
         )
       } else {
-        // Добавление нового кредита
         const response = await axios.post('/api/loans', newLoan)
         toast.success('Loan added successfully')
         setLoans([...loans, response.data])
@@ -197,6 +192,11 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
                     </option>
                   ))}
             </select>
+            {borrowerId === '' && (
+              <p className="mt-1 text-sm text-red-500">
+                Please select a borrower.
+              </p>
+            )}
 
             <label>Lender:</label>
             <select
@@ -208,13 +208,18 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
               {users &&
                 Array.isArray(users) &&
                 users
-                  .filter((user) => user.isLender && user.id !== borrowerId) // Фильтрация по заемщику
+                  .filter((user) => user.isLender && user.id !== borrowerId)
                   .map((user) => (
                     <option key={user.id} value={user.id}>
                       {user.name}
                     </option>
                   ))}
             </select>
+            {lenderId === '' && (
+              <p className="mt-1 text-sm text-red-500">
+                Please select a lender.
+              </p>
+            )}
 
             <label>Status:</label>
             <select
@@ -253,7 +258,7 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
                 onChange={(e) => {
                   const newDuration = Number(e.target.value)
                   setDuration(newDuration)
-                  setInterest(calculateAPR(newDuration)) // Пересчитываем процент для нового срока
+                  setInterest(calculateAPR(newDuration))
                 }}
               />
             </div>
@@ -265,6 +270,9 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
               onChange={(e) => setCollateral(e.target.value)}
               placeholder="Enter collateral details"
             />
+            {collateralError && (
+              <p className="mt-1 text-sm text-red-500">{collateralError}</p>
+            )}
           </div>
         </div>
 

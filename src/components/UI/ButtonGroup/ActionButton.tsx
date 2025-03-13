@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import React from 'react'
 
 interface ActionButtonProps {
@@ -17,7 +18,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   ariaLabel,
   className
 }) => (
-  <button
+  <Button
     className={className}
     onClick={onClick}
     disabled={disabled}
@@ -25,7 +26,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   >
     {icon}
     {label && <span>{label}</span>}
-  </button>
+  </Button>
 )
 
 export default ActionButton

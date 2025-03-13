@@ -10,6 +10,7 @@ import LoanList from '../components/UI/Loans/LoanList'
 import LoanModal from '../components/UI/Loans/LoanModal'
 import UserList from '../components/UI/Users/UserList'
 import UserModal from '../components/UI/Users/UserModal'
+import { Box, Tabs, Tab, useMediaQuery, useTheme } from '@mui/material'
 
 interface HomeProps {
   loans: Loan[]
@@ -21,7 +22,6 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
   const [users, setUsers] = useState<Array<User>>(storedUsers)
   const [activeTab, setActiveTab] = useState('loans')
 
-  // Отдельные рефы для модалок
   const loanModalRef = useRef<ModalHandles>(null)
   const userModalRef = useRef<ModalHandles>(null)
 
@@ -37,6 +37,14 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
     loanModalRef.current?.openEditModal(loan)
   }, [])
 
+  const theme = useTheme()
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const handleTabChange = (_: React.ChangeEvent<unknown>, newValue: string) => {
+    setActiveTab(newValue)
+  }
+
   return (
     <>
       <Head>
@@ -44,72 +52,86 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
         <link rel="icon" href="/favicon.svg" />
       </Head>
       <MainPage>
-        <div className="flex">
-          <div className="flex w-1/4 flex-col">
-            <button
-              onClick={() => setActiveTab('users')}
-              className={`px-4 py-2 text-left text-lg font-medium ${
-                activeTab === 'users' ? 'bg-gray-300' : 'bg-gray-100'
-              }`}
-            >
-              Users
-            </button>
-            <button
-              onClick={() => setActiveTab('loans')}
-              className={`px-4 py-2 text-left text-lg font-medium ${
-                activeTab === 'loans' ? 'bg-gray-300' : 'bg-gray-100'
-              }`}
-            >
-              Loans
-            </button>
-          </div>
-
-          <div className="ml-8 w-full">
-            {activeTab === 'users' && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold">Users</h3>
-                  <ActionButton
-                    icon={<FiPlus size={18} />}
-                    className="btn btn-primary"
-                    onClick={openUserModal}
-                    label="Create a new user"
-                    ariaLabel="Create a new user"
-                  />
-                </div>
-
-                <div className="rounded-lg bg-gray-200 p-4">
-                  <UserList users={users} />
-                </div>
-              </div>
+        <Box>
+          <Box
+            className={`flex ${isMobile ? 'w-full flex-col' : 'w-full flex-row'}`}
+          >
+            {isMobile ? (
+              <Tabs
+                value={activeTab}
+                onChange={handleTabChange}
+                aria-label="tabs"
+                variant="fullWidth"
+              >
+                <Tab label="Users" value="users" />
+                <Tab label="Loans" value="loans" />
+              </Tabs>
+            ) : (
+              <Box className="flex w-1/4 flex-col">
+                <button
+                  onClick={() => setActiveTab('users')}
+                  className={`px-4 py-2 text-left text-lg font-medium ${
+                    activeTab === 'users' ? 'bg-gray-300' : 'bg-gray-100'
+                  }`}
+                >
+                  Users
+                </button>
+                <button
+                  onClick={() => setActiveTab('loans')}
+                  className={`px-4 py-2 text-left text-lg font-medium ${
+                    activeTab === 'loans' ? 'bg-gray-300' : 'bg-gray-100'
+                  }`}
+                >
+                  Loans
+                </button>
+              </Box>
             )}
+            <Box className={isMobile ? 'mt-8 w-full' : 'ml-8 w-full'}>
+              {activeTab === 'users' && (
+                <Box className="space-y-4">
+                  <Box className="flex justify-between text-center">
+                    <h3 className="text-xl font-semibold">Users</h3>
+                    <ActionButton
+                      icon={<FiPlus size={18} />}
+                      className="btn btn-primary"
+                      onClick={openUserModal}
+                      label="Create a new user"
+                      ariaLabel="Create a new user"
+                    />
+                  </Box>
 
-            {activeTab === 'loans' && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold">Loans</h3>
-                  <ActionButton
-                    icon={<FiPlus size={18} />}
-                    className="btn btn-primary"
-                    onClick={openLoanModal}
-                    label="Create a new loan"
-                    ariaLabel="Create a new loan"
-                  />
-                </div>
-                <div className="rounded-lg bg-gray-200 p-4">
-                  <LoanList
-                    loans={loans}
-                    onEditLoan={openEditLoanModal}
-                    setLoans={setLoans}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+                  <Box className="rounded-lg bg-gray-200 p-4">
+                    <UserList users={users} />
+                  </Box>
+                </Box>
+              )}
+
+              {activeTab === 'loans' && (
+                <Box className="space-y-4">
+                  <Box className="flex items-center justify-between">
+                    <h3 className="text-xl font-semibold">Loans</h3>
+                    <ActionButton
+                      icon={<FiPlus size={18} />}
+                      className="btn btn-primary"
+                      onClick={openLoanModal}
+                      label="Create a new loan"
+                      ariaLabel="Create a new loan"
+                    />
+                  </Box>
+                  <Box className="rounded-lg bg-gray-200 p-4">
+                    <LoanList
+                      loans={loans}
+                      onEditLoan={openEditLoanModal}
+                      setLoans={setLoans}
+                    />
+                  </Box>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
       </MainPage>
 
-      {/* Передаем отдельные рефы для каждой модалки */}
       <LoanModal
         loans={loans}
         setLoans={setLoans}

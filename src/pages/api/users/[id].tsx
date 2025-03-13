@@ -7,7 +7,7 @@ const handleGetRequest = async (req: VercelRequest, res: VercelResponse) => {
   const { id } = req.query
 
   try {
-    const user = await getUserById(id as string) // use the new function
+    const user = await getUserById(id as string)
 
     if (user) {
       return res.status(200).json(user)

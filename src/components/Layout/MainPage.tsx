@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import Logo from '../../../assets/logo.svg'
 import Header from './Header'
+import { Box, Typography } from '@mui/material'
 
 interface MainPageProps {
   children: ReactNode
@@ -10,24 +11,30 @@ interface MainPageProps {
 
 const MainPage = ({ children, additionalText }: MainPageProps) => {
   return (
-    <div className="min-h-screen">
+    <Box className="min-h-screen">
       <Header />
       <main className="flex flex-col items-center justify-center px-4 py-12">
-        <div className="mx-auto w-full">
-          <div className="fade-in mb-6 text-center">
+        <Box className="mx-auto w-full">
+          <Box className="fade-in mb-6 text-center">
             <Logo className="mx-auto mb-4 h-12 w-12 fill-current dark:text-darkPrimary" />
-            <h1 className="heading-primary">Manage Loans with Ease</h1>
-            <h2 className="heading-secondary">
-              Track and optimize loans effortlessly.
-            </h2>
-          </div>
+            <Typography className="heading-primary">
+              Manage Loans with Ease
+            </Typography>
+            {!additionalText && (
+              <Typography className="heading-secondary">
+                Track and optimize loans effortlessly.
+              </Typography>
+            )}
+          </Box>
           {additionalText && (
-            <p className="heading-secondary">{additionalText}</p>
+            <Typography className="heading-secondary text-center">
+              {additionalText}
+            </Typography>
           )}
-          <div className="mt-8 w-full">{children}</div>
-        </div>
+          <Box className="mt-8 w-full">{children}</Box>
+        </Box>
       </main>
-    </div>
+    </Box>
   )
 }
 

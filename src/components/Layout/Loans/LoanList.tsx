@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Loan } from '../../../types'
-import ButtonGroup from '../ButtonGroup'
+import ButtonGroup from '../../UI/ButtonGroup'
 import Card from './LoanCard'
 import { Typography, Box } from '@mui/material'
 

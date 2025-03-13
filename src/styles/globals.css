@@ -37,18 +37,6 @@ body {
     font-size: 0.875rem;
   }
 
-  .card {
-    @apply rounded-lg border-2 border-darkSecondary p-6 shadow-xl transition-transform hover:scale-105;
-  }
-
-  .card-header {
-    @apply text-lg font-bold text-primary;
-  }
-
-  .card-body {
-    @apply text-sm text-secondary;
-  }
-
   .fade-in {
     @apply animate-fade-in;
   }
@@ -57,28 +45,12 @@ body {
     @apply animate-scale-up;
   }
 
-  .input-field {
-    @apply px-3 py-2;
-  }
-
-  .input-error {
-    @apply text-sm text-red-500;
-  }
-
-  .container-responsive {
-    @apply mx-auto w-[90%] max-w-[40rem] sm:w-[80%] md:w-[70%];
-  }
-
   .heading-primary {
     @apply text-4xl font-bold text-darkSecondary;
   }
 
   .heading-secondary {
     @apply text-xl text-gray-700;
-  }
-
-  .heading-tertiary {
-    @apply text-lg text-gray-500;
   }
 
   .icon-button {
@@ -93,10 +65,6 @@ body {
     @apply bg-blue-600 text-white hover:bg-blue-700;
   }
 
-  .icon-button:disabled {
-    @apply cursor-not-allowed bg-gray-400 text-gray-600;
-  }
-
   .icon-button:focus,
   .btn-primary:focus,
   .btn-secondary:focus {
@@ -107,21 +75,13 @@ body {
     @apply flex justify-between text-lg font-medium;
   }
 
-  .loan-detail-text {
-    @apply mb-3 text-lg font-medium;
-  }
-
   .input-style {
     @apply mb-4 w-full rounded-lg border-2 p-3 text-sm hover:border-darkPrimary focus:outline-none focus:ring-1 focus:ring-darkPrimary;
   }
 
   .slider {
     @apply h-2 w-full appearance-none rounded-lg bg-gray-700;
-    background: linear-gradient(
-      to right,
-      #585858,
-      #2a2a2a
-    ); /* Gradient from dark gray to darker gray */
+    background: linear-gradient(to right, #585858, #2a2a2a);
     transition: background 0.3s ease;
   }
 
@@ -144,7 +104,7 @@ body {
   }
 
   .modal-header {
-    @apply mb-4 flex items-center justify-between rounded-t-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-3;
+    @apply centred-box mb-4 rounded-t-lg bg-gradient-to-r from-darkSecondary via-darkPrimary to-darkBg p-3;
   }
 
   .modal-body {
@@ -152,7 +112,7 @@ body {
   }
 
   .modal-footer {
-    @apply mt-4 flex items-center justify-between;
+    @apply centred-box mt-4;
   }
 
   .burger-btn {
@@ -181,5 +141,9 @@ body {
 
   .mb-10 {
     @apply mb-6;
+  }
+
+  .centred-box {
+    @apply flex items-center justify-between;
   }
 }

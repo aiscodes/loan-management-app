@@ -15,15 +15,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(200).json(loan)
 
       case 'PUT':
-        const { amount, interest, duration, collateral, borrowerId, lenderId } =
-          req.body
+        const {
+          amount,
+          interest,
+          duration,
+          collateral,
+          borrowerId,
+          lenderId,
+          status
+        } = req.body
         const updatedLoan = await updateLoan(id as string, {
           amount,
           interest,
           duration,
           collateral,
           borrowerId,
-          lenderId
+          lenderId,
+          status
         })
         return res.status(200).json(updatedLoan)
 

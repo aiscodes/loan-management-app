@@ -12,3 +12,7 @@ export const getStatusColor = (status: string) => {
       return '#b0bec5'
   }
 }
+
+export const getRoleColor = (isBorrower: boolean): string => {
+  return isBorrower ? '#4CAF50' : '#FF9800'
+}

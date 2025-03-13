@@ -14,6 +14,7 @@ import axios from 'axios'
 import { Loan, LoanStatus, ModalHandles, User } from '../../../types'
 import { calculateAPR } from '../../../utils'
 import { validateCollateral } from '../../../lib/validation'
+import SelectInput from '../../UI/SelectInput'
 
 interface Props {
   loans: Loan[]
@@ -118,12 +119,7 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
         await axios.put(`/api/loans/${loan.id}`, newLoan)
         toast.success('Loan updated successfully')
         setLoans(
-          loans.map((l) => {
-            if (l.id === loan.id) {
-              return { ...l, ...newLoan }
-            }
-            return l
-          })
+          loans.map((l) => (l.id === loan.id ? { ...l, ...newLoan } : l))
         )
       } else {
         const response = await axios.post('/api/loans', newLoan)
@@ -175,63 +171,35 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
 
         <div className="flex gap-8">
           <div className="w-1/2">
-            <label>Borrower:</label>
-            <select
-              className="input-style"
+            <SelectInput
+              label="Borrower"
               value={borrowerId}
-              onChange={(e) => setBorrowerId(e.target.value)}
-            >
-              <option value="">Select Borrower</option>
-              {users &&
-                Array.isArray(users) &&
-                users
-                  .filter((user) => user.isBorrower)
-                  .map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))}
-            </select>
-            {borrowerId === '' && (
-              <p className="mt-1 text-sm text-red-500">
-                Please select a borrower.
-              </p>
-            )}
+              onChange={setBorrowerId}
+              options={users
+                .filter((user) => user.isBorrower)
+                .map((user) => ({ value: user.id, label: user.name }))}
+            />
 
-            <label>Lender:</label>
-            <select
-              className="input-style"
+            <SelectInput
+              label="Lender"
               value={lenderId}
-              onChange={(e) => setLenderId(e.target.value)}
-            >
-              <option value="">Select Lender</option>
-              {users &&
-                Array.isArray(users) &&
-                users
-                  .filter((user) => user.isLender && user.id !== borrowerId)
-                  .map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))}
-            </select>
-            {lenderId === '' && (
-              <p className="mt-1 text-sm text-red-500">
-                Please select a lender.
-              </p>
-            )}
+              onChange={setLenderId}
+              options={users
+                .filter((user) => user.isLender && user.id !== borrowerId)
+                .map((user) => ({ value: user.id, label: user.name }))}
+            />
 
-            <label>Status:</label>
-            <select
-              className="input-style"
+            <SelectInput
+              label="Status"
               value={status}
-              onChange={(e) => setStatus(e.target.value as any)}
-            >
-              <option value="PENDING">Pending</option>
-              <option value="ACTIVE">Active</option>
-              <option value="PAID">Paid</option>
-              <option value="DEFAULTED">Defaulted</option>
-            </select>
+              onChange={(value) => setStatus(value as LoanStatus)}
+              options={[
+                { value: 'PENDING', label: 'Pending' },
+                { value: 'ACTIVE', label: 'Active' },
+                { value: 'PAID', label: 'Paid' },
+                { value: 'DEFAULTED', label: 'Defaulted' }
+              ]}
+            />
           </div>
 
           <div className="w-1/2">
@@ -248,9 +216,8 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
             </div>
 
             <div className="mb-6">
-              <label className="slider-label">Length: {duration} Months</label>
+              <label>Length: {duration} Months</label>
               <input
-                className="slider"
                 type="range"
                 min="12"
                 max="60"
@@ -260,8 +227,10 @@ const LoanModal: React.ForwardRefRenderFunction<ModalHandles, Props> = (
                   setDuration(newDuration)
                   setInterest(calculateAPR(newDuration))
                 }}
+                className="slider"
               />
             </div>
+
             <label>Collateral:</label>
             <input
               type="text"

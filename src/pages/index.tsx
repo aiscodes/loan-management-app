@@ -6,10 +6,10 @@ import { getLoans, getUsers } from '../utils'
 import { Loan, ModalHandles, User } from '../types'
 import ActionButton from '../components/UI/ButtonGroup/ActionButton'
 import { FiPlus } from 'react-icons/fi'
-import LoanList from '../components/UI/Loans/LoanList'
-import LoanModal from '../components/UI/Loans/LoanModal'
-import UserList from '../components/UI/Users/UserList'
-import UserModal from '../components/UI/Users/UserModal'
+import LoanList from '../components/Layout/Loans/LoanList'
+import LoanModal from '../components/Layout/Loans/LoanModal'
+import UserList from '../components/Layout/Users/UserList'
+import UserModal from '../components/Layout/Users/UserModal'
 import { Box, Tabs, Tab, useMediaQuery, useTheme } from '@mui/material'
 
 interface HomeProps {
@@ -89,7 +89,7 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
             <Box className={isMobile ? 'mt-8 w-full' : 'ml-8 w-full'}>
               {activeTab === 'users' && (
                 <Box className="space-y-4">
-                  <Box className="flex justify-between text-center">
+                  <Box className="centred-box">
                     <h3 className="text-xl font-semibold">Users</h3>
                     <ActionButton
                       icon={<FiPlus size={18} />}
@@ -108,7 +108,7 @@ const Home = ({ loans: storedLoans, users: storedUsers }: HomeProps) => {
 
               {activeTab === 'loans' && (
                 <Box className="space-y-4">
-                  <Box className="flex items-center justify-between">
+                  <Box className="centred-box">
                     <h3 className="text-xl font-semibold">Loans</h3>
                     <ActionButton
                       icon={<FiPlus size={18} />}
